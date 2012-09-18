@@ -77,7 +77,7 @@ title: this is the title
 ---
 text
 """
-        expected = '<div class="step slide" data-y="0"><p>text</p></div>'
+        expected = '<div class="step slide" data-y="800"><p>text</p></div>'
         current = self.sut.process(given)
 
         self.assertContains(expected, current)

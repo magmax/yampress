@@ -33,13 +33,16 @@ class Yampress(object):
     def _process_title(self):
         result = ''
         if self.config.has_key('title'):
-            result += '<div class="step slide" data-y="{}"><h1>{}</h1></div>'.format(self.position, self.config['title'])
+            result += self._get_slide(self.config['title'])
         return result
 
     def _process_body(self, data):
         result = ''
         for slide in data:
-            result += '<div class="step slide" data-y="0"><p>{}</p></div>'.format(slide)
+            if type(slide) is str:
+                result += self._get_slide('', slide)
+            elif type(slide) is dict:
+                result += self._get_slide(slide.get('title', ''), slide.get('content', ''))
         return result
 
     def _get_styles(self):
@@ -53,4 +56,11 @@ class Yampress(object):
         result = ''
         for style in styles:
             result += '<link href="{}" rel="stylesheet"/>'.format(style)
+        return result
+
+    def _get_slide(self, title, body=None):
+        titlefmt = '<h1>{}</h1>'.format(title) if title else ''
+        bodyfmt = '<p>{}</p>'.format(body) if body else ''
+        result = '<div class="step slide" data-y="{}">{}{}</div>'.format(self.position, titlefmt, bodyfmt)
+        self.position += self.step
         return result
