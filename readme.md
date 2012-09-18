@@ -1,6 +1,8 @@
+# YAMPRESS
+
 Build your presentations easily and fast!
 
-# Idea #
+## Idea ##
 
 I liked very much the idea of [impress.js](http://bartaz.github.com/impress.js), but it is very hard to implement for every presentation.
 
