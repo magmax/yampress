@@ -82,3 +82,14 @@ text
 
         self.assertContains(expected, current)
 
+    def test_normal_content_with_title(self):
+        given = """---
+title: this is the title
+---
+title: title
+content: text
+"""
+        expected = '<div class="step slide" data-y="800"><h1>title</h1><p>text</p></div>'
+        current = self.sut.process(given)
+
+        self.assertContains(expected, current)
