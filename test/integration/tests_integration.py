@@ -3,10 +3,7 @@
 import unittest
 from yampress import Yampress
 
-class BasicUsageTest(unittest.TestCase):
-    def setUp(self):
-        self.sut = Yampress()
-
+class BaseHelper(object):
     def assertStartsWith(self, expected, current):
         self.assertTrue(current.startswith(expected), '\nexpected:\n{}\n---\ncurrent:{}\n---\n'.format(expected, current))
 
@@ -15,6 +12,11 @@ class BasicUsageTest(unittest.TestCase):
 
     def assertContains(self, expected, current):
         self.assertTrue(expected in current, '\nexpected:\n{}\n---\ncurrent:{}\n---\n'.format(expected, current))
+
+
+class BasicUsageTest(unittest.TestCase, BaseHelper):
+    def setUp(self):
+        self.sut = Yampress()
 
     def test_setting_the_title(self):
         given = """---
@@ -60,6 +62,22 @@ title: this is the title
 style: style1.css
 """
         expected = '<link href="style1.css" rel="stylesheet"/>'
+        current = self.sut.process(given)
+
+        self.assertContains(expected, current)
+
+
+class BasicContentTest(unittest.TestCase, BaseHelper):
+    def setUp(self):
+        self.sut = Yampress()
+
+    def test_normal_content(self):
+        given = """---
+title: this is the title
+---
+text
+"""
+        expected = '<div class="step slide" data-y="0"><p>text</p></div>'
         current = self.sut.process(given)
 
         self.assertContains(expected, current)

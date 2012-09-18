@@ -38,4 +38,19 @@ class Yampress(object):
 
     def _process_body(self, data):
         result = ''
+        for slide in data:
+            result += '<div class="step slide" data-y="0"><p>{}</p></div>'.format(slide)
+        return result
+
+    def _get_styles(self):
+        if not self.config.has_key('style'):
+            return ''
+
+        styles = self.config['style']
+        if type(styles) is not list:
+            return '<link href="{}" rel="stylesheet"/>'.format(styles)
+
+        result = ''
+        for style in styles:
+            result += '<link href="{}" rel="stylesheet"/>'.format(style)
         return result
