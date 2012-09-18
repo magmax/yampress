@@ -21,6 +21,9 @@ class Yampress(object):
         result = ''
         if self.config.has_key('title'):
             result += '<title>{}</title>'.format(self.config['title'])
+        if self.config.has_key('style'):
+            for style in self.config['style']:
+                result += '<link href="{}" rel="stylesheet"/>'.format(style)
         return result
 
     def _process_title(self):
