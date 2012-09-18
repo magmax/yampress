@@ -15,7 +15,7 @@ class Yampress(object):
         content['head'] = self._process_head()
         content['title'] = self._process_title()
         content['body'] = self._process_body(generator)
-        return '<!doctype html><html><head>{head}</head><body><div id="impress">{title}{body}</div></body></html>'.format(**content)
+        return '<!doctype html><html><head>{head}</head><body><div id="impress">{title}{body}</div><script src="impress.js"></script><script>impress().init();</script></body></html>'.format(**content)
 
     def _process_head(self):
         result = ''
