@@ -53,3 +53,14 @@ style: [style1.css, style2.css]
 
         self.assertContains(expected, current)
 
+
+    def test_adding_only_one_style(self):
+        given = """---
+title: this is the title
+style: style1.css
+"""
+        expected = '<link href="style1.css" rel="stylesheet"/>'
+        current = self.sut.process(given)
+
+        self.assertContains(expected, current)
+
