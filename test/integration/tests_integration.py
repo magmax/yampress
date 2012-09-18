@@ -27,7 +27,7 @@ title: this is the title
         given = """---
 title: this is the title
 """
-        expected = '<div id="impress"><div class="step"><h1>this is the title</h1></div></div>'
+        expected = '<div id="impress"><div class="step slide" data-y="0"><h1>this is the title</h1></div></div>'
         current = self.sut.process(given)
 
         self.assertContains(expected, current)
