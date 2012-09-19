@@ -1,7 +1,8 @@
 #!/usr/bin/python
 
 import yaml
-
+import sys
+import argparse
 
 class Header(object):
     def __init__(self):
@@ -36,12 +37,12 @@ class Impress(object):
         content['header'] = self._render_header(document.header)
         content['cover'] = self._render_cover(document.cover)
         content['body'] = self._render_slides(document.slides)
-        return '<!doctype html>\n<html>\n<head>\n{header}\n</head>\n<body>\n<div id="impress">{cover}{body}</div>\n<script src="impress.js"></script>\n<script>impress().init();</script>\n</body>\n</html>'.format(**content)
+        return '<!doctype html>\n<html>\n<head>\n{header}</head>\n<body>\n<div id="impress">{cover}{body}</div>\n<script src="impress.js"></script>\n<script>impress().init();</script>\n</body>\n</html>'.format(**content)
 
     def _render_header(self, header):
         result = ''
         if header.title:
-            result += '<title>{}</title>'.format(header.title)
+            result += '<title>{}</title>\n'.format(header.title)
 
         for style in header.styles:
             result += '<link href="{}" rel="stylesheet"/>\n'.format(style)
@@ -112,3 +113,20 @@ class Yampress(object):
                 slide.body = item.get('content', '')
         return slides
 
+
+def main():
+    parser = argparse.ArgumentParser(description='Generate your pretty slides')
+    parser.add_argument('--source', dest='source', action='store', required=True, type=file,
+                        help='file to process')
+    parser.add_argument('--output', dest='output', action='store', required=True,
+                        help='output file')
+
+    args = parser.parse_args()
+
+    yampress = Yampress()
+    with file(args.output, 'w+') as fd:
+        fd.write(yampress.process(args.source))
+
+
+if __name__ == '__main__':
+    main()
