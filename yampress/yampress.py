@@ -3,65 +3,109 @@
 import yaml
 
 
-class Yampress(object):
+class Header(object):
+    def __init__(self):
+        self.title = None
+        self.styles = []
+
+
+class Cover(object):
+    def __init__(self):
+        self.title = None
+
+
+class Slide(object):
+    def __init__(self):
+        self.title = ''
+
+
+class Document(object):
+    def __init__(self):
+        self.header = None
+        self.cover = None
+        self.slides = []
+
+
+class Impress(object):
     def __init__(self):
         self.step = 800
         self.position = 0
+
+    def render(self, document):
+        content = {}
+        content['header'] = self._render_header(document.header)
+        content['cover'] = self._render_cover(document.cover)
+        content['body'] = self._render_slides(document.slides)
+        return '<!doctype html>\n<html>\n<head>\n{header}\n</head>\n<body>\n<div id="impress">{cover}{body}</div>\n<script src="impress.js"></script>\n<script>impress().init();</script>\n</body>\n</html>'.format(**content)
+
+    def _render_header(self, header):
+        result = ''
+        if header.title:
+            result += '<title>{}</title>'.format(header.title)
+
+        for style in header.styles:
+            result += '<link href="{}" rel="stylesheet"/>\n'.format(style)
+        return result
+
+    def _render_cover(self, cover):
+        result = ''
+        titlefmt = '\n<h1>{}</h1>'.format(cover.title) if cover.title else ''
+        result = '\n<div class="step slide" data-y="{}">{}\n</div>\n'.format(self.position, titlefmt)
+        self.position += self.step
+        return result
+
+    def _render_slides(self, slides):
+        result = ''
+        for slide in slides:
+            result += self._render_slide(slide)
+        return result
+
+    def _render_slide(self, slide):
+        result = ''
+        titlefmt = '\n<h1>{}</h1>'.format(slide.title) if slide.title else ''
+        bodyfmt = '\n<p>{}</p>'.format(slide.body) if slide.body else ''
+        result = '\n<div class="step slide" data-y="{}">{}{}\n</div>\n'.format(self.position, titlefmt, bodyfmt)
+        self.position += self.step
+        return result
+
+
+class Yampress(object):
+    def __init__(self):
         self.config = {}
 
     def process(self, iml):
         generator = yaml.load_all(iml)
-        content = {}
         self.config = generator.next()
-        content['head'] = self._process_head()
-        content['title'] = self._process_title()
-        content['body'] = self._process_body(generator)
-        return '<!doctype html>\n<html>\n<head>\n{head}\n</head>\n<body>\n<div id="impress">{title}{body}</div>\n<script src="impress.js"></script>\n<script>impress().init();</script>\n</body>\n</html>'.format(**content)
+        document = Document()
+        document.header = self._process_header()
+        document.cover = self._process_cover()
+        document.slides = self._process_slides(generator)
+        renderer = Impress()
+        return renderer.render(document)
 
-    def _process_head(self):
-        result = ''
-        if self.config.has_key('title'):
-            result += '<title>{}</title>'.format(self.config['title'])
-        if self.config.has_key('style'):
-            styles = self.config['style']
-            if type(styles) is not list:
-                result += '<link href="{}" rel="stylesheet"/>\n'.format(styles)
-            else:
-                for style in self.config['style']:
-                    result += '<link href="{}" rel="stylesheet"/>\n'.format(style)
-        return result
 
-    def _process_title(self):
-        result = ''
-        if self.config.has_key('title'):
-            result += self._get_slide(self.config['title'])
-        return result
+    def _process_header(self):
+        header = Header()
+        header.title = self.config.get('title', '')
 
-    def _process_body(self, data):
-        result = ''
-        for slide in data:
-            if type(slide) is str:
-                result += self._get_slide('', slide)
-            elif type(slide) is dict:
-                result += self._get_slide(slide.get('title', ''), slide.get('content', ''))
-        return result
+        styles = self.config.get('style', [])
+        header.styles = styles if type(styles) is list else [styles]
+        return header
 
-    def _get_styles(self):
-        if not self.config.has_key('style'):
-            return ''
+    def _process_cover(self):
+        cover = Cover()
+        cover.title = self.config.get('title', '')
+        return cover
 
-        styles = self.config['style']
-        if type(styles) is not list:
-            return '<link href="{}" rel="stylesheet"/>'.format(styles)
+    def _process_slides(self, data):
+        slides = []
+        for item in data:
+            slide = Slide()
+            slides.append(slide)
+            if type(item) is str:
+                slide.body = item
+            elif type(item) is dict:
+                slide.title = item.get('title', '')
+                slide.body = item.get('content', '')
+        return slides
 
-        result = ''
-        for style in styles:
-            result += '<link href="{}" rel="stylesheet"/>'.format(style)
-        return result
-
-    def _get_slide(self, title, body=None):
-        titlefmt = '\n<h1>{}</h1>'.format(title) if title else ''
-        bodyfmt = '\n<p>{}</p>'.format(body) if body else ''
-        result = '\n<div class="step slide" data-y="{}">{}{}\n</div>\n'.format(self.position, titlefmt, bodyfmt)
-        self.position += self.step
-        return result
