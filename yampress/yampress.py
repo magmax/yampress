@@ -2,6 +2,7 @@
 
 import yaml
 
+
 class Yampress(object):
     def __init__(self):
         self.step = 800
@@ -15,7 +16,7 @@ class Yampress(object):
         content['head'] = self._process_head()
         content['title'] = self._process_title()
         content['body'] = self._process_body(generator)
-        return '<!doctype html><html><head>{head}</head><body><div id="impress">{title}{body}</div><script src="impress.js"></script><script>impress().init();</script></body></html>'.format(**content)
+        return '<!doctype html>\n<html>\n<head>\n{head}\n</head>\n<body>\n<div id="impress">{title}{body}</div>\n<script src="impress.js"></script>\n<script>impress().init();</script>\n</body>\n</html>'.format(**content)
 
     def _process_head(self):
         result = ''
@@ -24,10 +25,10 @@ class Yampress(object):
         if self.config.has_key('style'):
             styles = self.config['style']
             if type(styles) is not list:
-                result += '<link href="{}" rel="stylesheet"/>'.format(styles)
+                result += '<link href="{}" rel="stylesheet"/>\n'.format(styles)
             else:
                 for style in self.config['style']:
-                    result += '<link href="{}" rel="stylesheet"/>'.format(style)
+                    result += '<link href="{}" rel="stylesheet"/>\n'.format(style)
         return result
 
     def _process_title(self):
@@ -59,8 +60,8 @@ class Yampress(object):
         return result
 
     def _get_slide(self, title, body=None):
-        titlefmt = '<h1>{}</h1>'.format(title) if title else ''
-        bodyfmt = '<p>{}</p>'.format(body) if body else ''
-        result = '<div class="step slide" data-y="{}">{}{}</div>'.format(self.position, titlefmt, bodyfmt)
+        titlefmt = '\n<h1>{}</h1>'.format(title) if title else ''
+        bodyfmt = '\n<p>{}</p>'.format(body) if body else ''
+        result = '\n<div class="step slide" data-y="{}">{}{}\n</div>\n'.format(self.position, titlefmt, bodyfmt)
         self.position += self.step
         return result

@@ -1,0 +1,38 @@
+#!/usr/bin/python
+# -*- coding:utf-8; tab-width:4; mode:python -*-
+
+import sys
+import unittest
+from StringIO import StringIO
+from difflib import Differ
+
+sys.path.append('./')
+sys.path.append('../')
+sys.path.append('../../')
+from yampress import Yampress
+
+
+class BaseHelper(object):
+    def assertContains(self, expected, current):
+        self.assertTrue(expected in current, self.render(expected, current))
+
+    def render(self, expected, current):
+        differ = Differ()
+        diff = list(differ.compare(expected.splitlines(), current.splitlines()))
+        return '\n' + '\n'.join(diff)
+
+
+{% for suitename, testlist in suites.items() %}
+class {{ suitename | validname }}_AutoTest(unittest.TestCase, BaseHelper):
+    """ {{ suitename }}  """
+    def setUp(self):
+        self.sut = Yampress()
+
+    {% for testname, test in testlist.items() %}
+    def test_{{ testname | validname }}(self):
+        """ {{ testname }}  """
+        content = """{{ test.contains }}"""
+        current = self.sut.process(StringIO("""{{ test.input | replace('"', '\\"') }}"""))
+        self.assertContains(content, current)
+    {% endfor %}
+{% endfor %}
