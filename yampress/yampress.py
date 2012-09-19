@@ -76,13 +76,16 @@ class Yampress(object):
     def process(self, iml):
         generator = yaml.load_all(iml)
         self.config = generator.next()
+
+        renderer = Impress()
+        return renderer.render(self._create_document(generator))
+
+    def _create_document(self, data):
         document = Document()
         document.header = self._process_header()
         document.cover = self._process_cover()
-        document.slides = self._process_slides(generator)
-        renderer = Impress()
-        return renderer.render(document)
-
+        document.slides = self._process_slides(data)
+        return document
 
     def _process_header(self):
         header = Header()
