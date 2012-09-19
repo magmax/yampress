@@ -13,7 +13,7 @@ With this idea in my brain I'm trying to build a language, based on YAML, easy t
 
 ## An example ##
 
-This example is currently working, but there are no *main* function yet:
+This example is currently working:
 
 	---
 	title: This is the title of the presentation
