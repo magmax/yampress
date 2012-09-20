@@ -9,7 +9,11 @@ all_tests::
 	nosetests
 
 json_tests::
-	nosetests -x tests/auto_test.py
+	nosetests -x test/auto_test.py
+
+coverage::
+	$(RM) -r coverage
+	nosetests --with-coverage --cover-html --cover-html-dir=coverage --cover-package=yampress test/auto_test.py
 
 clean:
 	find . -name "*~" -exec ${RM} {} \;
