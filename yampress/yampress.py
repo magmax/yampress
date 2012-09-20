@@ -78,8 +78,7 @@ class Impress(object):
         return result
 
     def _render_cover(self, cover):
-        title = self.TMPL_COVER_TITLE.format(cover.title) if cover.title \
-            else ''
+        title = self.TMPL_COVER_TITLE.format(cover.title)
         result = self.TMPL_COVER_SLIDE.format(self.position, title)
         self.position += self.step
         return result
