@@ -27,6 +27,12 @@ This example is currently working:
 	---
 	This is the fouth slide, without any title.
 	In the future, it should contain the same title than the previous slide :D
+	---
+	title: Lists
+	content:
+	  - first item
+	  - second item
+	  - third item
 
 Easy enough?
 
@@ -38,12 +44,6 @@ In some days I want to have this:
 	title: Wish list
 	style: css/impress.css
 	---
-	title: Support for lists
-	content:
-	  - first item
-	  - second item
-	  - third item
-	---
 	title: Support for columns
 	content:
 	-
@@ -52,6 +52,10 @@ In some days I want to have this:
 	-
 	  - third item in column 2
 	  - fouth item
+	---
+	title: Pictures go in fixed positions
+	content:
+	images: [image1.png, image2.png]
 	---
 	title: Support for background pictures
 	background-image: image.png

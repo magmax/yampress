@@ -30,5 +30,11 @@
 	    'input': '---\ntitle: this is the title\n---\ntitle: title\ncontent: text',
 	    'contains': '<div class="step slide" data-y="800">\n<h1>title</h1>\n<p>text</p>\n</div>'
 	}
+    },
+    'advanced content': {
+    	'using lists': {
+	    'input': '---\ntitle: title\n---\ntitle: title\ncontent:\n- first item\n- second item',
+	    'contains': '<li>first item</li>\n<li>second item</li>'
+	}
     }
 }

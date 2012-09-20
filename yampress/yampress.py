@@ -64,10 +64,24 @@ class Impress(object):
     def _render_slide(self, slide):
         result = ''
         titlefmt = '\n<h1>{}</h1>'.format(slide.title) if slide.title else ''
-        bodyfmt = '\n<p>{}</p>'.format(slide.body) if slide.body else ''
+        bodyfmt = self._render_slide_content(slide.body)
         result = '\n<div class="step slide" data-y="{}">{}{}\n</div>\n'.format(self.position, titlefmt, bodyfmt)
         self.position += self.step
         return result
+
+    def _render_slide_content(self, content):
+        if not content:
+            return ''
+
+        if type(content) is str:
+            return '\n<p>{}</p>'.format(content)
+
+        if type(content) is list:
+            result = ''
+            for item in content:
+                result += '\n<li>{}</li>'.format(item)
+            return '\n<ul>{}\n</ul>'.format(result)
+
 
 
 class Yampress(object):
