@@ -13,11 +13,11 @@
 	    'contains': '<script src="impress.js"></script>\n<script>impress().init();</script>\n</body>\n</html>'
 	},
 	'adding styles': {
-	    'input': '---\ntitle: this is the title\nstyle: [style1.css, style2.css]',
+	    'input': '---\ntitle: this is the title\nstyle: [style1, style2]',
 	    'contains': '<link href="style1.css" rel="stylesheet"/>\n<link href="style2.css" rel="stylesheet"/>\n'
 	},
 	'adding only one style': {
-	    'input': '---\ntitle: this is the title\nstyle: style1.css',
+	    'input': '---\ntitle: this is the title\nstyle: style1',
 	    'contains': '<link href="style1.css" rel="stylesheet"/>\n'
 	},
     },

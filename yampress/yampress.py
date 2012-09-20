@@ -45,7 +45,7 @@ class Impress(object):
             result += '<title>{}</title>\n'.format(header.title)
 
         for style in header.styles:
-            result += '<link href="{}" rel="stylesheet"/>\n'.format(style)
+            result += '<link href="{}.css" rel="stylesheet"/>\n'.format(style)
         return result
 
     def _render_cover(self, cover):
