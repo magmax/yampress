@@ -1,5 +1,8 @@
 
-all:: all_tests
+all:: all_tests pep
+
+pep::
+	pep8 yampress/yampress.py
 
 all_tests::
 	nosetests

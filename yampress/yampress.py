@@ -4,6 +4,7 @@ import yaml
 import sys
 import argparse
 
+
 class Header(object):
     def __init__(self):
         self.title = None
@@ -28,7 +29,9 @@ class Document(object):
 
 
 class Impress(object):
-    TMPL_MAIN = '<!doctype html>\n<html>\n<head>{header}\n</head>\n<body>\n<div id="impress">{cover}{body}\n</div>\n<script src="impress.js"></script>\n<script>impress().init();</script>\n</body>\n</html>'
+    TMPL_MAIN = '<!doctype html>\n<html>\n<head>{header}\n</head>\n<body>\n'\
+        '<div id="impress">{cover}{body}\n</div>\n<script src="impress.js">'\
+        '</script>\n<script>impress().init();</script>\n</body>\n</html>'
     TMPL_PAGE_TITLE = '\n<title>{}</title>'
     TMPL_STYLE = '\n<link href="{}.css" rel="stylesheet"/>'
     TMPL_COVER_TITLE = '\n<h1>{}</h1>'
@@ -60,9 +63,9 @@ class Impress(object):
         return result
 
     def _render_cover(self, cover):
-        result = ''
-        titlefmt = self.TMPL_COVER_TITLE.format(cover.title) if cover.title else ''
-        result = self.TMPL_COVER_SLIDE.format(self.position, titlefmt)
+        title = self.TMPL_COVER_TITLE.format(cover.title) if cover.title \
+            else ''
+        result = self.TMPL_COVER_SLIDE.format(self.position, title)
         self.position += self.step
         return result
 
@@ -73,7 +76,6 @@ class Impress(object):
         return result
 
     def _render_slide(self, slide):
-        result = ''
         titlefmt = self.TMPL_TITLE.format(slide.title) if slide.title else ''
         bodyfmt = self._render_slide_content(slide.body)
         result = self.TMPL_SLIDE.format(self.position, titlefmt, bodyfmt)
@@ -92,7 +94,6 @@ class Impress(object):
             for item in content:
                 result += self.TMPL_CONTENT_LISTITEM.format(item)
             return self.TMPL_CONTENT_LIST.format(result)
-
 
 
 class Yampress(object):
@@ -141,9 +142,11 @@ class Yampress(object):
 
 def main():
     parser = argparse.ArgumentParser(description='Generate your pretty slides')
-    parser.add_argument('--source', dest='source', action='store', required=True, type=file,
+    parser.add_argument('--source', dest='source', action='store',
+                        required=True, type=file,
                         help='file to process')
-    parser.add_argument('--output', dest='output', action='store', required=True,
+    parser.add_argument('--output', dest='output', action='store',
+                        required=True,
                         help='output file')
 
     args = parser.parse_args()
