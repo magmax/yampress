@@ -3,6 +3,7 @@ all:: all_tests pep
 
 pep::
 	pep8 yampress/yampress.py
+	pep8 test/__init__.py
 
 all_tests::
 	nosetests

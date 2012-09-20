@@ -82,3 +82,8 @@ Another point is to generate an optional index, being able to set sections, sub-
 The idea is to generate [Beamer](http://es.wikipedia.org/wiki/Beamer) templates too, so you can share your PDFs. But the first approach is by using *impress.js* in the beginning.
 
 So, the YMI language should be language independant :D
+
+
+# License #
+
+Yampress code is GPL3. Your designs and slides are yours, so they are MIT. This way you can change it at your convenience.
