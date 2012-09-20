@@ -28,6 +28,17 @@ class Document(object):
 
 
 class Impress(object):
+    TMPL_MAIN = '<!doctype html>\n<html>\n<head>{header}\n</head>\n<body>\n<div id="impress">{cover}{body}\n</div>\n<script src="impress.js"></script>\n<script>impress().init();</script>\n</body>\n</html>'
+    TMPL_PAGE_TITLE = '\n<title>{}</title>'
+    TMPL_STYLE = '\n<link href="{}.css" rel="stylesheet"/>'
+    TMPL_COVER_TITLE = '\n<h1>{}</h1>'
+    TMPL_COVER_SLIDE = '\n<div class="step slide" data-y="{}">{}\n</div>'
+    TMPL_TITLE = '\n<h1>{}</h1>'
+    TMPL_SLIDE = '\n<div class="step slide" data-y="{}">{}{}\n</div>'
+    TMPL_CONTENT_NORMAL = '\n<p>{}</p>'
+    TMPL_CONTENT_LISTITEM = '\n<li>{}</li>'
+    TMPL_CONTENT_LIST = '\n<ul>{}\n</ul>'
+
     def __init__(self):
         self.step = 800
         self.position = 0
@@ -37,21 +48,21 @@ class Impress(object):
         content['header'] = self._render_header(document.header)
         content['cover'] = self._render_cover(document.cover)
         content['body'] = self._render_slides(document.slides)
-        return '<!doctype html>\n<html>\n<head>\n{header}</head>\n<body>\n<div id="impress">{cover}{body}</div>\n<script src="impress.js"></script>\n<script>impress().init();</script>\n</body>\n</html>'.format(**content)
+        return self.TMPL_MAIN.format(**content)
 
     def _render_header(self, header):
         result = ''
         if header.title:
-            result += '<title>{}</title>\n'.format(header.title)
+            result += self.TMPL_PAGE_TITLE.format(header.title)
 
         for style in header.styles:
-            result += '<link href="{}.css" rel="stylesheet"/>\n'.format(style)
+            result += self.TMPL_STYLE.format(style)
         return result
 
     def _render_cover(self, cover):
         result = ''
-        titlefmt = '\n<h1>{}</h1>'.format(cover.title) if cover.title else ''
-        result = '\n<div class="step slide" data-y="{}">{}\n</div>\n'.format(self.position, titlefmt)
+        titlefmt = self.TMPL_COVER_TITLE.format(cover.title) if cover.title else ''
+        result = self.TMPL_COVER_SLIDE.format(self.position, titlefmt)
         self.position += self.step
         return result
 
@@ -63,9 +74,9 @@ class Impress(object):
 
     def _render_slide(self, slide):
         result = ''
-        titlefmt = '\n<h1>{}</h1>'.format(slide.title) if slide.title else ''
+        titlefmt = self.TMPL_TITLE.format(slide.title) if slide.title else ''
         bodyfmt = self._render_slide_content(slide.body)
-        result = '\n<div class="step slide" data-y="{}">{}{}\n</div>\n'.format(self.position, titlefmt, bodyfmt)
+        result = self.TMPL_SLIDE.format(self.position, titlefmt, bodyfmt)
         self.position += self.step
         return result
 
@@ -74,13 +85,13 @@ class Impress(object):
             return ''
 
         if type(content) is str:
-            return '\n<p>{}</p>'.format(content)
+            return self.TMPL_CONTENT_NORMAL.format(content)
 
         if type(content) is list:
             result = ''
             for item in content:
-                result += '\n<li>{}</li>'.format(item)
-            return '\n<ul>{}\n</ul>'.format(result)
+                result += self.TMPL_CONTENT_LISTITEM.format(item)
+            return self.TMPL_CONTENT_LIST.format(result)
 
 
 
