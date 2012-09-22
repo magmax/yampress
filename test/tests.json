@@ -22,6 +22,10 @@
 	},
     },
     'basic content': {
+	'empty content': {
+	    'input': '---\ntitle: title\n---\n',
+	    'contains': '<div class="step slide" data-y="800">\n</div>'
+	},
 	'only text': {
 	    'input': '---\ntitle: title\n---\ntext',
 	    'contains': '<div class="step slide" data-y="800">\n<p>text</p>\n</div>'

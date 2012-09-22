@@ -34,6 +34,7 @@ class Cover(object):
 class Slide(object):
     def __init__(self):
         self.title = ''
+        self.body = ''
 
 
 class Document(object):
