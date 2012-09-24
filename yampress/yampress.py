@@ -29,6 +29,7 @@ class Header(object):
 class Cover(object):
     def __init__(self):
         self.title = None
+        self.author = None
 
 
 class Slide(object):
@@ -51,6 +52,7 @@ class Impress(object):
     TMPL_PAGE_TITLE = '\n<title>{}</title>'
     TMPL_STYLE = '\n<link href="{}.css" rel="stylesheet"/>'
     TMPL_COVER_TITLE = '\n<h1>{}</h1>'
+    TMPL_COVER_AUTHOR = '\n<h3>{}</h3>'
     TMPL_COVER_SLIDE = '\n<div class="step slide" data-y="{}">{}\n</div>'
     TMPL_TITLE = '\n<h1 class="title">{}</h1>'
     TMPL_SLIDE = '\n<div class="step slide" data-y="{}">{}{}\n</div>'
@@ -79,8 +81,9 @@ class Impress(object):
         return result
 
     def _render_cover(self, cover):
-        title = self.TMPL_COVER_TITLE.format(cover.title)
-        result = self.TMPL_COVER_SLIDE.format(self.position, title)
+        content =  self.TMPL_COVER_TITLE.format(cover.title)
+        content += self.TMPL_COVER_AUTHOR.format(cover.author) if cover.author else ''
+        result = self.TMPL_COVER_SLIDE.format(self.position, content)
         self.position += self.step
         return result
 
@@ -140,6 +143,7 @@ class Yampress(object):
     def _process_cover(self):
         cover = Cover()
         cover.title = self.config.get('title', '')
+        cover.author = self.config.get('author', '')
         return cover
 
     def _process_slides(self, data):

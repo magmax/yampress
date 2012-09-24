@@ -8,6 +8,10 @@
 	    'input': '---\ntitle: this is the title',
 	    'contains': '<div id="impress">\n<div id="cover">\n<div class="step slide" data-y="0">\n<h1>this is the title</h1>\n</div>\n</div>\n</div>'
 	},
+	'initial page can contain the author': {
+	    'input': '---\ntitle: title\nauthor: the author',
+	    'contains': '<div id="impress">\n<div id="cover">\n<div class="step slide" data-y="0">\n<h1>title</h1>\n<h3>the author</h3>\n</div>\n</div>\n</div>'
+	},
 	'footer': {
 	    'input': '---\ntitle: this is the title',
 	    'contains': '<script src="impress.js"></script>\n<script>impress().init();</script>\n</body>\n</html>'
