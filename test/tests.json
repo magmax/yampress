@@ -6,7 +6,7 @@
 	},
 	'has an initial page': {
 	    'input': '---\ntitle: this is the title',
-	    'contains': '<div id="impress">\n<div class="step slide" data-y="0">\n<h1>this is the title</h1>\n</div>\n</div>'
+	    'contains': '<div id="impress">\n<div id="cover">\n<div class="step slide" data-y="0">\n<h1>this is the title</h1>\n</div>\n</div>\n</div>'
 	},
 	'footer': {
 	    'input': '---\ntitle: this is the title',
@@ -32,7 +32,7 @@
 	},
 	'normal content with title': {
 	    'input': '---\ntitle: this is the title\n---\ntitle: title\ncontent: text',
-	    'contains': '<div class="step slide" data-y="800">\n<h1>title</h1>\n<p>text</p>\n</div>'
+	    'contains': '<div class="step slide" data-y="800">\n<h1 class="title">title</h1>\n<p>text</p>\n</div>'
 	}
     },
     'advanced content': {

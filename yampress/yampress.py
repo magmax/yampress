@@ -46,13 +46,13 @@ class Document(object):
 
 class Impress(object):
     TMPL_MAIN = '<!doctype html>\n<html>\n<head>{header}\n</head>\n<body>\n'\
-        '<div id="impress">{cover}{body}\n</div>\n<script src="impress.js">'\
+        '<div id="impress">\n<div id="cover">{cover}\n</div>{body}\n</div>\n<script src="impress.js">'\
         '</script>\n<script>impress().init();</script>\n</body>\n</html>'
     TMPL_PAGE_TITLE = '\n<title>{}</title>'
     TMPL_STYLE = '\n<link href="{}.css" rel="stylesheet"/>'
     TMPL_COVER_TITLE = '\n<h1>{}</h1>'
     TMPL_COVER_SLIDE = '\n<div class="step slide" data-y="{}">{}\n</div>'
-    TMPL_TITLE = '\n<h1>{}</h1>'
+    TMPL_TITLE = '\n<h1 class="title">{}</h1>'
     TMPL_SLIDE = '\n<div class="step slide" data-y="{}">{}{}\n</div>'
     TMPL_CONTENT_NORMAL = '\n<p>{}</p>'
     TMPL_CONTENT_LISTITEM = '\n<li>{}</li>'
