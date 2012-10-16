@@ -1,48 +1,65 @@
 {
     'basic usage': {
-	'setting the title': {
-	    'input': '---\ntitle: this is the title',
-	    'contains': '<!doctype html>\n<html>\n<head>\n<title>this is the title</title>\n</head>'
-	},
-	'has an initial page': {
-	    'input': '---\ntitle: this is the title',
-	    'contains': '<div id="impress">\n<div id="cover">\n<div class="step slide" data-y="0">\n<h1>this is the title</h1>\n</div>\n</div>\n</div>'
-	},
-	'initial page can contain the author': {
-	    'input': '---\ntitle: title\nauthor: the author',
-	    'contains': '<div id="impress">\n<div id="cover">\n<div class="step slide" data-y="0">\n<h1>title</h1>\n<h3>the author</h3>\n</div>\n</div>\n</div>'
-	},
-	'footer': {
-	    'input': '---\ntitle: this is the title',
-	    'contains': '<script src="impress.js"></script>\n<script>impress().init();</script>\n</body>\n</html>'
-	},
-	'adding styles': {
-	    'input': '---\ntitle: this is the title\nstyle: [style1, style2]',
-	    'contains': '<link href="style1.css" rel="stylesheet"/>\n<link href="style2.css" rel="stylesheet"/>\n'
-	},
-	'adding only one style': {
-	    'input': '---\ntitle: this is the title\nstyle: style1',
-	    'contains': '<link href="style1.css" rel="stylesheet"/>\n'
-	},
+				'setting the title': {
+						'input': '---\ntitle: this is the title',
+						'contains': ['<!doctype html>\n<html>\n<head>\n<title>this is the title</title>\n</head>']
+				},
+				'has an initial page': {
+						'input': '---\ntitle: this is the title',
+						'contains': ['<div id="impress">\n<div id="cover">\n<div class="step slide" data-y="0">\n<h1>this is the title</h1>\n</div>\n</div>\n</div>']
+				},
+				'initial page can contain the author': {
+						'input': '---\ntitle: title\nauthor: the author',
+						'contains': ['<div id="impress">\n<div id="cover">\n<div class="step slide" data-y="0">\n<h1>title</h1>\n<h3>the author</h3>\n</div>\n</div>\n</div>']
+				},
+				'footer': {
+						'input': '---\ntitle: this is the title',
+						'contains': ['<script src="impress.js">\n</script>\n<script>impress().init();</script>\n</body>\n</html>']
+				},
+				'adding styles': {
+						'input': '---\ntitle: this is the title\nstyle: [style1, style2]',
+						'contains': ['<link href="style1.css" rel="stylesheet"/>\n<link href="style2.css" rel="stylesheet"/>\n']
+				},
+				'adding only one style': {
+						'input': '---\ntitle: this is the title\nstyle: style1',
+						'contains': ['<link href="style1.css" rel="stylesheet"/>\n']
+				},
     },
     'basic content': {
-	'empty content': {
-	    'input': '---\ntitle: title\n---\n',
-	    'contains': '<div class="step slide" data-y="800">\n</div>'
-	},
-	'only text': {
-	    'input': '---\ntitle: title\n---\ntext',
-	    'contains': '<div class="step slide" data-y="800">\n<p>text</p>\n</div>'
-	},
-	'normal content with title': {
-	    'input': '---\ntitle: this is the title\n---\ntitle: title\ncontent: text',
-	    'contains': '<div class="step slide" data-y="800">\n<h1 class="title">title</h1>\n<p>text</p>\n</div>'
-	}
+				'empty content': {
+						'input': '---\ntitle: title\n---\n',
+						'contains': ['<div class="step slide" data-y="800">\n</div>']
+				},
+				'only text': {
+						'input': '---\ntitle: title\n---\ntext',
+						'contains': ['<div class="step slide" data-y="800">\n<p>text</p>\n</div>']
+				},
+				'normal content with title': {
+						'input': '---\ntitle: this is the title\n---\ntitle: title\ncontent: text',
+						'contains': ['<div class="step slide" data-y="800">\n<h1 class="title">title</h1>\n<p>text</p>\n</div>']
+				}
     },
     'advanced content': {
-    	'using lists': {
-	    'input': '---\ntitle: title\n---\ntitle: title\ncontent:\n- first item\n- second item',
-	    'contains': '<li>first item</li>\n<li>second item</li>'
-	}
-    }
+    		'using lists': {
+						'input': '---\ntitle: title\n---\ntitle: title\ncontent:\n- first item\n- second item',
+						'contains': ['<li>first item</li>\n<li>second item</li>']
+				}
+    },
+		'basic options': {
+				'make an html with embedded css': {
+						'options': {'pack': 'css'},
+						'input': '---\ntitle: this is the title\nstyle: [default]',
+						'contains': ['<style type="text/css">']
+				},
+				'make an html with embedded js': {
+						'options': {'pack': 'js'},
+						'input': '---\ntitle: this is the title\nstyle: [default]',
+						'contains': ['<script language="javascript">']
+				},
+				'make an html with embedded css and js': {
+						'options': {'pack': 'all'},
+						'input': '---\ntitle: this is the title\nstyle: [default]',
+						'contains': ['<style type="text/css">', '<script language="javascript">']
+				}
+		}
 }

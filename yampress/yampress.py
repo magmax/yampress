@@ -47,10 +47,13 @@ class Document(object):
 
 class Impress(object):
     TMPL_MAIN = '<!doctype html>\n<html>\n<head>{header}\n</head>\n<body>\n'\
-        '<div id="impress">\n<div id="cover">{cover}\n</div>{body}\n</div>\n<script src="impress.js">'\
-        '</script>\n<script>impress().init();</script>\n</body>\n</html>'
+        '<div id="impress">\n<div id="cover">{cover}\n</div>{body}\n'\
+        '</div>{js}\n<script>impress().init();</script>\n</body>\n</html>'
+    TMPL_MAIN_INCLUDE_JS = '\n<script src="impress.js">\n</script>'
+    TMPL_MAIN_INSERT_JS = '\n<script language="javascript">\n{}\n</script>'
     TMPL_PAGE_TITLE = '\n<title>{}</title>'
     TMPL_STYLE = '\n<link href="{}.css" rel="stylesheet"/>'
+    TMPL_STYLE_EMBEDDED = '\n<style type="text/css">\n{}</style>'
     TMPL_COVER_TITLE = '\n<h1>{}</h1>'
     TMPL_COVER_AUTHOR = '\n<h3>{}</h3>'
     TMPL_COVER_SLIDE = '\n<div class="step slide" data-y="{}">{}\n</div>'
@@ -60,15 +63,17 @@ class Impress(object):
     TMPL_CONTENT_LISTITEM = '\n<li>{}</li>'
     TMPL_CONTENT_LIST = '\n<ul>{}\n</ul>'
 
-    def __init__(self):
+    def __init__(self, options):
         self.step = 800
         self.position = 0
+        self.options = options
 
     def render(self, document):
         content = {}
         content['header'] = self._render_header(document.header)
         content['cover'] = self._render_cover(document.cover)
         content['body'] = self._render_slides(document.slides)
+        content['js'] = self._render_javascript()
         return self.TMPL_MAIN.format(**content)
 
     def _render_header(self, header):
@@ -77,12 +82,17 @@ class Impress(object):
             result += self.TMPL_PAGE_TITLE.format(header.title)
 
         for style in header.styles:
-            result += self.TMPL_STYLE.format(style)
+            if self.options.get('pack', None) in ['css', 'all']:
+                with file('{}.css'.format(style)) as fd:
+                    result += self.TMPL_STYLE_EMBEDDED.format(fd.read())
+            else:
+                result += self.TMPL_STYLE.format(style)
         return result
 
     def _render_cover(self, cover):
-        content =  self.TMPL_COVER_TITLE.format(cover.title)
-        content += self.TMPL_COVER_AUTHOR.format(cover.author) if cover.author else ''
+        content = self.TMPL_COVER_TITLE.format(cover.title)
+        if cover.author:
+            content += self.TMPL_COVER_AUTHOR.format(cover.author)
         result = self.TMPL_COVER_SLIDE.format(self.position, content)
         self.position += self.step
         return result
@@ -99,6 +109,12 @@ class Impress(object):
         result = self.TMPL_SLIDE.format(self.position, titlefmt, bodyfmt)
         self.position += self.step
         return result
+
+    def _render_javascript(self):
+        if self.options.get('pack', None) not in ['js', 'all']:
+            return self.TMPL_MAIN_INCLUDE_JS
+        with file('impress.js') as fd:
+            return self.TMPL_MAIN_INSERT_JS.format(fd.read())
 
     def _render_slide_content(self, content):
         if not content:
@@ -117,12 +133,13 @@ class Impress(object):
 class Yampress(object):
     def __init__(self):
         self.config = {}
+        self.options = {}
 
     def process(self, iml):
         generator = yaml.load_all(iml)
         self.config = generator.next()
 
-        renderer = Impress()
+        renderer = Impress(self.options)
         return renderer.render(self._create_document(generator))
 
     def _create_document(self, data):
@@ -167,10 +184,14 @@ def main():
     parser.add_argument('--output', dest='output', action='store',
                         required=True,
                         help='output file')
+    parser.add_argument('--pack', dest='pack', choices=['css', 'js', 'all'],
+                        default=None,
+                        help='Embed CSS, JavaScript or both.')
 
     args = parser.parse_args()
 
     yampress = Yampress()
+    yampress.options['pack'] = args.pack
     with file(args.output, 'w+') as fd:
         fd.write(yampress.process(args.source))
 

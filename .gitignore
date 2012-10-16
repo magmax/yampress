@@ -1,3 +1,7 @@
 *.pyc
 *~
 auto_test.py
+lib
+impress.js
+.coverage
+coverage

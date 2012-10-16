@@ -3,6 +3,7 @@
 
 import sys
 import unittest
+import re
 from StringIO import StringIO
 from difflib import Differ
 
@@ -16,11 +17,18 @@ class BaseHelper(object):
     def assertContains(self, expected, current):
         self.assertTrue(expected in current, self.render(expected, current))
 
+    def assertMatches(self, expected, current):
+        match = re.findall(expected, current)
+        self.assertTrue(match, self.render_regex(expected, current, match))
+
     def render(self, expected, current):
         differ = Differ()
         diff = list(differ.compare(expected.splitlines(), current.splitlines()))
         return '\n' + '\n'.join(diff)
 
+    def render_regex(self, regex, current, match):
+        result = 'Regular expression not found:\nExpression:\n{}\nContent:\n{}\nMatchs:\n{}'.format(regex, current, match)
+        return result
 
 {% for suitename, testlist in suites.items() %}
 class {{ suitename | validname }}_AutoTest(unittest.TestCase, BaseHelper):
@@ -31,8 +39,17 @@ class {{ suitename | validname }}_AutoTest(unittest.TestCase, BaseHelper):
     {% for testname, test in testlist.items() %}
     def test_{{ testname | validname }}(self):
         """ {{ testname }}  """
-        content = """{{ test.contains }}"""
+        {% if test.has_key('options') %}
+            {% for key, value in test['options'].items() %}
+        self.sut.options['{{ key }}'] = '{{ value }}'
+            {% endfor %}
+        {% endif %}
         current = self.sut.process(StringIO("""{{ test.input | replace('"', '\\"') }}"""))
-        self.assertContains(content, current)
+        {% for match in test.contains %}
+        self.assertContains("""{{ match }}""", current)
+        {% endfor %}
+        {% for match in test.matches %}
+        self.assertMatches("""{{ match }}""", current)
+        {% endfor %}
     {% endfor %}
 {% endfor %}

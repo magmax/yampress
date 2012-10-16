@@ -1,0 +1,28 @@
+---
+title: This is the title of the presentation
+subtitle: Showing simple presentations
+author: Miguel Angel Garcia
+style: styles/default
+---
+title: This is the title of the first slide
+content: And this is the content for the slide XD
+---
+title: This is the title of the second slide
+content: And this is the content for the second slide!!!
+---
+This is the fouth slide, without any title.
+In the future, it should contain the same title than the previous slide :D
+---
+title: Slide with list
+content:
+- First element
+- second element
+---
+title: Proof of concept
+content:
+-
+  - What happen with multi column environments
+  - :D
+-
+  - Testing it
+  - With several columns

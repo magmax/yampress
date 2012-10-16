@@ -36,6 +36,8 @@ This example is currently working:
 
 Easy enough?
 
+You can see [real examples][examples] :D
+
 ## In some days... ###
 
 In some days I want to have this:
