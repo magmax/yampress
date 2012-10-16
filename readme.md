@@ -37,7 +37,7 @@ This example is currently working:
 Easy enough?
 
 You can see some real examples:
-* basic example: [code](examples/basic.iml) [view](http://www.magmax.org/yampress/basic.html)
+* basic example: [code](yampress/examples/basic.iml) / [view](http://www.magmax.org/yampress/basic.html)
 
 ## In some days... ###
 
